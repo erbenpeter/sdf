@@ -1,0 +1,212 @@
+\input{header}
+
+\title{Képpont árnyalók és előjeles távolság függvények}
+\author{Erben Péter}
+
+\begin{document}
+\maketitle
+
+\section{Képpont árnyalók}
+
+\begin{tcolorbox}[title=Képpont árnyalók]
+A \emph{képpont árnyalók} (pixel shaders) olyan programok, amelyeket a számítógépi grafikában használnak.
+Léteznek szabványos \emph{árnyaló nyelvek} (például GLSL ES), amelyeket a grafikus kártyák
+is tudnak értelmezni és futtatni. A futtató hardver vagy szoftver egy téglalap alakú tartomány
+minden $(x,y)$ pontjára meghívja a képpont árnyaló programot, aminek egy színt kell visszaadnia,
+az $(x,y)$ képpont színét.
+
+A színeket általában RGBA kódolással definiáljuk, vagyis $(r, g, b, a)$ alakú négydimenziós
+valós vektorokkal írjuk le, ahol $r$, $g$ és $b$ a vörös, zöld és kék komponens 0 és 1 közé eső
+értéke, $a$ pedig az átlátszatlanság.
+
+$$\mathcal{S}: \mathbb{R}^2 \mapsto \mathbb{R}^4$$
+$$\mathcal{S}(x, y) = (r, g, b, a)$$
+\end{tcolorbox}
+
+A képpont árnyaló programok egyik hasznos jellemzője, hogy a készülő kép minden képpontját
+egymástól függetlenül színezik ki. Ez jelentősen tudja javítani például számítógépes animációk
+sebességét (a másodpercenként kirajzolható képkockák számát), ha a grafikus hardver támogatja
+a képpont árnyaló program \emph{párhuzamosított} futtatását.
+
+\subsection{ShaderToy}
+
+Az egyik népszerű online alkalmazás képpont árnyékolók tanulásához az Inigo Quilez által fejlesztett
+\url{shadertoy.com}. A következőkben a ShaderToy által használt képpont árnyaló nyelvet fogjuk használni,
+ami a GLSL ES egy változata.
+
+\subsubsection{Hello, ShaderToy!}
+
+Az árnyaló nyelv hasonlít a C programozási nyelvhez (ha ez segít valakinek). Az $\mathcal{S}(x,y)$
+függvényt a \texttt{mainImage} függvény valósítja meg. A bemenő képpont (pixel) $x$ és $y$ koordinátája
+a bemenő \texttt{fragCoord} objektumból olvasható ki: \texttt{fragCoord.x} és \texttt{fragCoord.y}.
+A kimenő szín-vektort a \texttt{fragColor} változóban kell kiszámolni.
+
+\begin{tcolorbox}[colback=yellow!5,colframe=yellow!50!black,title=Példa: ferde négyzetet rajzoló árnyaló]
+\begin{minted}[linenos, xleftmargin=1em]{glsl}
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+  vec2 uv = (fragCoord - 0.5 * iResolution.xy) / iResolution.y;
+  vec3 rgb = abs(uv.x) + abs(uv.y) < 0.2 ? vec3(0.0) : vec3(1.0);
+  fragColor = vec4(vec3(uv.x), 1.0);
+}
+\end{minted}  
+\end{tcolorbox}
+
+A fenti példa egy szokásos transzformációt is elvégez, mielőtt a tényleges árnyaló logikát megvalósítaná.
+
+A 3. sorban a globálisan elérhető \texttt{iResolution} objektum (vektor) felhasználásával eltolja a $(0, 0)$ pontot
+a kép középpontjába, majd normalizálja a koordinátákat úgy, hogy az $y$ érték $-0.5$ és $0.5$ közé essen.
+(Itt láthatjuk, hogy a legtöbb művelet az árnyaló nyelvekben ,,vektorizált'', a műveletek értik, hogy amikor
+vektorokkal dolgoznak, koordinátánként kell-e elvégezni a számolást.)
+
+A 4. sorban feketére vagy fehérre színezzük az $(x, y)$ képpontot attól függöen, hogy teljesül-e
+az $|x|+|y| < 0.2$ egyenlőtlenség. (A fekete szín RGB kódolása három nulla, a \texttt{vec3} \emph{konstruktor}
+érti, hogy ha egy paramétert kapott, akkor mindhárom koordinátát arra állítja be.)
+
+Végül az 5. sorban az látható, hogy a ShaderToy aktuális verziójában az $a$ értéke mindig 1.0, vagyis
+nem változtatható az átlátszatlanság.
+
+
+\subsubsection{Input értékek}
+
+\begin{tcolorbox}[colback=yellow!5,colframe=yellow!50!black,title=Néhány ShaderToy input változó]
+\begin{minted}{glsl}
+vec3      iResolution;      // viewport resolution (in pixels)
+float     iTime;            // shader playback time (in seconds)
+int       iFrame;           // shader playback frame
+vec4      iMouse;           // mouse pixel coords. xy: current (if MLB down), zw: click
+\end{minted}  
+\end{tcolorbox}
+  
+
+\subsubsection{Típusok}
+
+\subsubsection{Operátorok}
+
+\subsection{Bevezető feladatok}
+
+\begin{enumerate}
+  \item Rajzoljunk szürkeátmenetet vízszintesen, függőlegesen és körkörösen.
+  \item Rajzoljunk adott méretű négyzetet origó középponttal.
+  \item Rajzoljunk adott sugarú kört origó középponttal.
+  \item Készítsünk egyszerű függvényábrázoló árnyékolót $y = f(x)$ alakban adott függvények kirajzolásához.
+\end{enumerate}
+
+\subsection{Animáció}
+
+Az árnyékolók nagyon egyszerűen használhatók animációk programozására, csupán
+be kell vezetnünk egy idő input változót:
+
+$$\mathcal{S}(x, y, t) = (r, g, b, a)$$
+
+A Shadertoy esetében ez az input változó az \texttt{iTime}, ami másodpercben méri az animáció indítása
+óta eltelt időt. Egy képkocka kiszámítása közben minden árnyaló hívás azonos $t$ értéket kap.
+
+Az alábbi példában a kirajzolt kör sugara az eltelt időtől függően változik, és a kör középpontja
+egér-kattintással módosítható.
+
+\begin{tcolorbox}[colback=yellow!5,colframe=yellow!50!black,title=Változó sugarú és középpontú kör]
+\begin{minted}{glsl}
+float circle(vec2 p, vec2 o, float r)
+{
+  return length(p - o) - r;
+}
+    
+vec4 color(in float d)
+{
+  float baseColor = d < 0.0 ? 0.5 : 1.0;
+  return vec4(vec3(baseColor), 1.0);
+}
+    
+vec2 toUV(vec2 coord)
+{
+  return (coord - 0.5 * iResolution.xy) / iResolution.y;
+}
+    
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+  vec2 uv = toUV(fragCoord);
+  vec2 mouse = toUV(iMouse.xy);
+  float d = circle(uv, mouse, fract(iTime) * 0.3);
+  fragColor = color(d);    
+}
+\end{minted}  
+\end{tcolorbox}
+
+\subsection{Geometriai transzformációk}
+
+Egy $g$ síkbeli geometriai transzformáció a sík minden pontjához a sík valamelyik pontját rendeli.
+
+$$g(x, y) = (x', y')$$
+
+\textbf{Feladat}: Adott egy síkbeli $\mathcal{A}$ alakzat az $\mathcal{S}()$ árnyalóval leírva. Hogyan állítható elő
+az $\mathcal{A}' = g(\mathcal{A})$ alakzat árnyalója?
+
+\textbf{Feladat}: Adjuk meg (és próbáljuk ki) a következő transzformációkat:
+(a) eltolás adott vektorral;
+(b) origó körüli forgatás;
+(c) origó középpontú nagyítás;
+(d) origó középpontú, egységsugarú inverzió.
+
+
+\subsection{Alakzat ismétlése}
+
+Ha van egy árnyalóval definiált alakzatunk, egyszerűen sokszorozhatjuk meg az alakzatot.
+
+\subsection{Összetettebb feladatok}
+
+\begin{enumerate}
+  \item Rajzoljunk sakktáblát, majd animáljuk (eltolás, elforgatás).
+  \item Rajzoljunk négyzetrácsot. (Itt csak a rácsegyenesek látszanak, a négyzetek belseje nincs kiszínezve.)
+  \item Rajzoljunk hatszögrácsot.
+\end{enumerate}
+
+\section{Előjeles távolság függvények a síkon}
+
+\begin{tcolorbox}[title=Előjeles távolság függvény (signed distance function)]
+  Az \emph{előjeles távolság függvény} egy $(x,y)$ pont előjeles távolságát adha meg egy ponthalmaz határától mérve.
+  Az egyszerűség kedvéért feltehetjük, hogy az alakzat egy zárt, folytonos, nem önmetsző görbével van megadva.
+  $$ t: \mathbb{R}^2 \mapsto \mathbb{R}$$
+  $$ t(x, y) = d$$
+
+  Ha $(x,y)$ rajta van az alakzat határán, akkor $t = 0$. Külső pontokra $t$ a pont és az alakzat távolságát adja meg.
+  Belső pontokra $t$ negatív előjellel adja meg a pont és a határgörbe távolságát.
+  
+  Az előjeles távolság függvények meglepően jól használhatók arra, hogy egy képet vagy animációt felépítsünk egyszerű
+  alap-alakzatokból.
+  \end{tcolorbox}
+
+\subsection{Bevezető feladatok: egyszerű alakzatok előjeles távolság függvénye}
+
+Adjuk meg a következő alakzatok előjeles távolság függvényét:
+
+\begin{enumerate}
+  \item Origó középpontú, $r$ sugarú kör.
+  \item Origó középpontú, adoot méretű, tengely-párhuzamos téglalap.
+  \item Végpontjaival adott szakasz.
+  \item (*) Szabályos sokszög.
+\end{enumerate}
+
+\subsection{Színezési modellek}
+
+\subsection{Polár-koordináták}
+
+\subsection{Kompozíció}
+
+\subsection{Deformáció}
+
+\subsection{Összetettebb feladatok}
+
+\includegraphics[width=5cm]{images/mug.png}
+\includegraphics[width=5cm]{images/cogwheels.png}
+
+\section{Előjeles távolság függvények a térben}
+
+\subsection{Sugár séta algoritmus (ray marching)}
+
+\subsection{Egyszerű megvilágítási modell}
+
+\subsection{Feladatok}
+
+
+\end{document}

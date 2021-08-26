@@ -1,0 +1,7 @@
+tex/_minted-sdf_ep2021/*
+tex/*.log
+tex/*.pdf
+tex/*.aux
+tex/*.fls
+tex/*.gz
+tex/*.fdb_latexmk
