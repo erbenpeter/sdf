@@ -10,7 +10,8 @@
 
 \begin{tcolorbox}[title=Képpont árnyalók]
 A \emph{képpont árnyalók} (pixel shaders) olyan programok, amelyeket a számítógépi grafikában használnak.
-Léteznek szabványos \emph{árnyaló nyelvek} (például GLSL ES), amelyeket a grafikus kártyák
+Léteznek szabványos \emph{árnyaló nyelvek} (például az OpenGL specifikáció részét képező GLSL ES),
+amelyeket a grafikus kártyák
 is tudnak értelmezni és futtatni. A futtató hardver vagy szoftver egy téglalap alakú tartomány
 minden $(x,y)$ pontjára meghívja a képpont árnyaló programot, aminek egy színt kell visszaadnia,
 az $(x,y)$ képpont színét.
@@ -28,7 +29,7 @@ egymástól függetlenül színezik ki. Ez jelentősen tudja javítani például
 sebességét (a másodpercenként kirajzolható képkockák számát), ha a grafikus hardver támogatja
 a képpont árnyaló program \emph{párhuzamosított} futtatását.
 
-\subsection{OpenGL, GLSL ES, ShaderToy}
+\subsection{GLSL ES, ShaderToy, Twigl}
 
 Az egyik népszerű online alkalmazás képpont árnyékolók tanulásához az Inigo Quilez által fejlesztett
 \url{shadertoy.com}. A következőkben a ShaderToy által használt képpont árnyaló nyelvet fogjuk használni,
@@ -41,21 +42,11 @@ függvényt a \texttt{mainImage} függvény valósítja meg. A bemenő képpont 
 a bemenő \texttt{fragCoord} objektumból olvasható ki: \texttt{fragCoord.x} és \texttt{fragCoord.y}.
 A kimenő szín-vektort a \texttt{fragColor} változóban kell kiszámolni.
 
-\begin{tcolorbox}[colback=yellow!5,colframe=yellow!50!black,title=Példa: ferde négyzetet rajzoló árnyaló]
-\begin{minted}[linenos, xleftmargin=1em]{glsl}
-void mainImage( out vec4 fragColor, in vec2 fragCoord )
-{
-  vec2 uv = (2.0 * fragCoord - iResolution.xy) / iResolution.y;
-  vec3 rgb = abs(uv.x) + abs(uv.y) < 0.2 ? vec3(0.0) : vec3(0.9);
-  fragColor = vec4(rgb, 1.0);
-}
-\end{minted}  
-\end{tcolorbox}
+\glslexample{Példa: ferde négyzetet rajzoló árnyaló}{../00_intro/examples/00hello.glsl}
 
-A fenti példa egy szokásos transzformációt is elvégez, mielőtt a tényleges árnyaló logikát megvalósítaná.
-
+A fenti példa először normalizájla az input koordinátákat, mielőtt a tényleges árnyaló logikát megvalósítaná.
 A 3. sorban a globálisan elérhető \texttt{iResolution} objektum (vektor) felhasználásával eltolja a $(0, 0)$ pontot
-a kép középpontjába, majd normalizálja a koordinátákat úgy, hogy az $y$ érték $-1$ és $1$ közé essen.
+a kép középpontjába, majd mindent leoszt az $y$ irányú felbontással. A kapott $y$ érték $-1$ és $1$ közé esik.
 (Itt láthatjuk, hogy a legtöbb művelet az árnyaló nyelvekben ,,vektorizált'', a műveletek értik, hogy amikor
 vektorokkal dolgoznak, koordinátánként kell-e elvégezni a számolást.)
 
@@ -77,13 +68,11 @@ A ShaderToy több kényelmi szolgáltatást is nyújt az árnyaló nyelv fölé 
 például olyan globális értékeket, amelyek a böngészőben futó programban kapnak értéket,
 mi pedig használhatjuk őket az árnyalóban. A folytatásban csak ezeket fogjuk használni:
 
-\begin{tcolorbox}[colback=yellow!5,colframe=yellow!50!black,title=Néhány ShaderToy input változó]
-\begin{minted}{glsl}
+\begin{glsl}{Néhány ShaderToy input változó}
 vec3      iResolution;      // viewport felbontás pixelben
 float     iTime;            // az árnyaló ennyi másodperce fut
-vec4      iMouse;           // egér pixel koordináták, xy: aktuális, zw: klikk 
-\end{minted}  
-\end{tcolorbox}
+vec4      iMouse;           // egér pixel koordináták, xy: aktuális, zw: klikk
+\end{glsl}
   
 
 \subsubsection{GLSL ES}
@@ -107,23 +96,29 @@ Adattípusok:
 
 Vektorok koordinátáit többféle módon elérhetjük, sőt egyszerűen permutálhatjuk is.
 
-\begin{tcolorbox}[colback=yellow!5,colframe=yellow!50!black,title=Swizzling]
-\begin{minted}{glsl}
-  vec3 v = vec3(0, 1, 2);
-  vec2 a = v.xy;           // (0, 1)
-  vec3 b = v.zzz;          // (2, 2, 2)
-  vec3 c = v.yzx;          // (1, 2, 0)
-\end{minted}  
-\end{tcolorbox}
+\begin{glsl}{Swizzling}
+vec3 v = vec3(0, 1, 2);
+vec2 a = v.xy;           // (0, 1)
+vec3 b = v.zzz;          // (2, 2, 2)
+vec3 c = v.yzx;          // (1, 2, 0)
+\end{glsl}
+
+\subsubsection{Hello, Twigl!}
+
+Az online ShaderToy egy alternativája a Twigl, amit saját gépünkre telepíthetünk és offline futtathatunk.
+A Twigl picit más elnevezéseket használ, ez az alább látható.
+
+\glslexample{Ferde négyzetet rajzoló árnyaló (Twigl verzió)}{../00_intro/examples/00hello_twigl.glsl}
+  
+A folytatásban a ShaderToy nyelvjárását fogjuk használni. 
 
 \matfeladatok
 
 Első próbálkozásnak kísérletezhetünk különböző színátmenetekkel. Ehhez normalizáljuk 0 és 1 közé
 az $x$ koordinátát, majd a képpontok színét adjuk meg ennek függvényeként.
 
-\begin{tcolorbox}[colback=yellow!5,colframe=yellow!50!black,title=Átmenetek]
- \begin{minted}{glsl}
-float f(float x) { return ??? }
+\begin{glsl}{Átmenetek}
+float f(float x) { return /*???*/ }
     
 void mainImage( out vec4 fragColor, in vec2 fragCoord )
 {
@@ -131,8 +126,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
   vec3 col = vec3(f(uv.x));
   fragColor = vec4(col,1.0);
 }
-\end{minted}  
-\end{tcolorbox}
+\end{glsl}
 
 Keressünk $f: [0, 1] \mapsto [0,1]$ átmenet függvényeket a következő tulajdonságokkal.
 Lehetőleg ne használjunk elágazást (\texttt{if}) csak aritmetikát és függvényeket.
@@ -147,7 +141,7 @@ Lehetőleg ne használjunk elágazást (\texttt{if}) csak aritmetikát és függ
 
 \subsection{Elemi alakzatok}
 
-A legegyszerűbb ,,modellezési'' megközelítés árnyalókkal az, hogy a bemeneti koordinátákra
+A legegyszerűbb ,,modellezési'' megközelítés árnyalókkal az, hogy minden bemeneti koordinátára
 eldöntjük, az alakzathoz tartozik-e vagy nem (igen / nem), majd ez alapján vagy az
 alakzat színét adjuk vissza, vagy a háttér színét.
 
@@ -193,12 +187,10 @@ alakzat színét adjuk vissza, vagy a háttér színét.
 Az \texttt{atan} függvény segítségével egyszerűen átalakíthatunk egy Descartes-koordinátákkal adott
 pontot polárkoordinátás alakba:
 
-\begin{tcolorbox}[colback=yellow!5,colframe=yellow!50!black,title=Polárkoordináták]
-  \begin{minted}{glsl}
-    float r = length(p);
-    float alpha = atan(p.y, p.x);
-  \end{minted}  
-\end{tcolorbox}
+\begin{glsl}{Polárkoordináták}
+float r = length(p);
+float alpha = atan(p.y, p.x);
+\end{glsl}
 
 Az \texttt{atan} függvény $-\pi$ és $\pi$ közé eső értéket ad, a 0 az X tengely pozitív irányának felel meg.
 Szürke árnyalatokkal illusztrálva ($-\pi$ a fekete, $\pi$ a fehér árnyalat):
@@ -244,29 +236,7 @@ A Shadertoy esetében ez az input változó az \texttt{iTime}, ami másodpercben
 Az alábbi példában a kirajzolt kör középpontja
 az eltelt időtől függően változik.
 
-\begin{tcolorbox}[colback=yellow!5,colframe=yellow!50!black,title=Változó sugarú és középpontú kör]
-\begin{minted}{glsl}
-bool innerPoint(vec2 p, vec2 o)
-{
-  float r = 0.2;
-  return length(p - o) <= r;
-}
-  
-float f(float t)
-{
-  float x = fract(t);
-  return x * (1.0 - x) * 2.5;
-}
-  
-void mainImage( out vec4 fragColor, in vec2 fragCoord )
-{
-  vec2 uv = (2.0 * fragCoord - iResolution.xy) / iResolution.y;
-  vec2 center = vec2(0.0, f(iTime));
-  vec3 col = vec3(innerPoint(uv, center) ? 0.0 : 1.0);
-  fragColor = vec4(col,1.0);
-}
-\end{minted}  
-\end{tcolorbox}
+\glslexample{,,Pattogó'' labda}{../00_intro/examples/90bouncingb.glsl}
 
 \progfeladatok
 

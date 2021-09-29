@@ -44,6 +44,19 @@
 
 \newcommand{\progfeladatok}{\textbf{Feladatok} (\faKeyboardO) \smallskip}
 \newcommand{\matfeladatok}{\textbf{Feladatok} (\faPencil) \smallskip}
+\newenvironment{glsl}[1]
+{\VerbatimEnvironment
+\begin{tcolorbox}[colback=yellow!5,colframe=yellow!50!black,title={{#1}}]
+\begin{minted}{glsl}}
+{\end{minted}\end{tcolorbox}}
+
+
+\newcommand{\glslexample}[2]{
+\begin{tcolorbox}[colback=yellow!5,colframe=yellow!50!black,title={#1}]
+\inputminted[linenos, xleftmargin=1em]{glsl}{#2}
+\end{tcolorbox}
+}
+
 
 \parskip 8pt
 \parindent 0pt
