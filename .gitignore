@@ -5,4 +5,5 @@ tex/*.pdf
 tex/*.aux
 tex/*.fls
 tex/*.gz
+tex/*.out
 tex/*.fdb_latexmk

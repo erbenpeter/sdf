@@ -1,7 +1,6 @@
 \input{header}
 
 \title{Képpont árnyalók és előjeles távolság függvények}
-\author{Erben Péter}
 
 \begin{document}
 \maketitle
@@ -62,46 +61,13 @@ nem változtatható az átlátszatlanság.
 \includegraphics[width=5cm]{images/hello.png}
 
 
-\subsubsection{Input értékek}
-
-A ShaderToy több kényelmi szolgáltatást is nyújt az árnyaló nyelv fölé építve. Definiál
-például olyan globális értékeket, amelyek a böngészőben futó programban kapnak értéket,
-mi pedig használhatjuk őket az árnyalóban. A folytatásban csak ezeket fogjuk használni:
-
-\begin{glsl}{Néhány ShaderToy input változó}
-vec3      iResolution;      // viewport felbontás pixelben
-float     iTime;            // az árnyaló ennyi másodperce fut
-vec4      iMouse;           // egér pixel koordináták, xy: aktuális, zw: klikk
-\end{glsl}
-  
-
 \subsubsection{GLSL ES}
 
-A GLSL ES nyelv leírása meghaladja ezen jegyzet kereteit, ezért csak néhány az árnyalókra jellemző
-specialitást emelünk ki és felsorolunk néhány gyakran használt függvényt. Aki már dolgozott C típusú
-programozási nyelvvel, hamar boldugolni fog az árnyaló nyelvvel is.
-
-Gyakran használt függvények:
-\texttt{abs, length, dot, cross, normalize, pow, sin, cos, atan}
-
-\texttt{fract, mod, floor, clamp, step, smoothstep}
-
-Adattípusok:
-\texttt{int}, 
-\texttt{float}, 
-\texttt{vec2}, 
-\texttt{vec3}, 
-\texttt{vec4} 
+A GLSL ES nyelv leírása meghaladja ezen jegyzet kereteit.
+A nyelv egy rövid kivonata a mellékelt \href{run:./glsl.pdf}{GLSL gyorstalpaló}
+dokumentumban olvasható.
 
 
-Vektorok koordinátáit többféle módon elérhetjük, sőt egyszerűen permutálhatjuk is.
-
-\begin{glsl}{Swizzling}
-vec3 v = vec3(0, 1, 2);
-vec2 a = v.xy;           // (0, 1)
-vec3 b = v.zzz;          // (2, 2, 2)
-vec3 c = v.yzx;          // (1, 2, 0)
-\end{glsl}
 
 \subsubsection{Hello, Twigl!}
 
@@ -138,6 +104,11 @@ Lehetőleg ne használjunk elágazást (\texttt{if}) csak aritmetikát és függ
   \item $f$ ,,simán'' köti össze a $(0,0)$ és $(1,1)$ pontokat, a végpontokban vízszintes az érintője.
   \item Ugyanaz, mint előbb, de $f$-ről azt is megköveteljük, hogy polinomfüggvény legyen. 
 \end{enumerate}
+
+A fentebb készített ábrákra tegyük rá az $y=f(x)$ függvény grafikonját is.
+
+\includegraphics[width=5cm]{images/fv.png}
+
 
 \subsection{Elemi alakzatok}
 
@@ -252,14 +223,15 @@ ponton több lépésben transzformációkat végzünk.
 
 \progfeladatok
 \begin{enumerate}
+  \item Rajzoljunk kis köröket egy $5\times 3$-as rács elrendezésben.
   \item Rajzoljunk Sierpinski-szőnyeget.
   \item Rajzoljunk Sierpinski-háromszöget.
-  \item (*) Rajzoljunk Mandelbrot-halmazt.
 \end{enumerate}
 
+\includegraphics[width=5cm]{images/iter01.png}
 \includegraphics[width=5cm]{images/sier4.png}
 \includegraphics[width=5cm]{images/sier3.png}
-\includegraphics[width=5cm]{images/mandel.png}
+
 
 
 \section{Előjeles távolság függvények a síkon}
