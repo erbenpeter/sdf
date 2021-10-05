@@ -1,4 +1,5 @@
 tex/_minted-sdf_ep2021/*
+tex/_minted-glsl/*
 tex/*.log
 tex/*.pdf
 tex/*.aux

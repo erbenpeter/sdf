@@ -1,0 +1,67 @@
+\input{glsl-header}
+
+\begin{document}
+
+\section*{GLSL ES gyorstalpaló}
+
+A GLSL ES az OpenGL specifikáció részét képező árnyaló nyelv egy változata.
+Szintakszisa lényegében megegyezik a C programozási nyelv szintakszisával.
+Az alábbiakban csak egy kis részhalmazát adjuk meg a nyelnek, ennyi elég a
+tábori feladatok megoldásához.
+
+\subsection*{Input értékek}
+
+A ShaderToy több kényelmi szolgáltatást is nyújt az árnyaló nyelv fölé építve. Definiál
+például olyan globális értékeket, amelyek a böngészőben futó programban kapnak értéket,
+mi pedig használhatjuk őket az árnyalóban. A folytatásban csak ezeket fogjuk használni:
+
+\begin{glsl}{Néhány ShaderToy input változó}
+vec3  iResolution; // felbontás pixelben
+float iTime;       // eltelt idő mp-ben
+vec4  iMouse;      // egér pixel koordináták
+\end{glsl}
+  
+\subsection*{Adattípusok}
+
+A GLSL szigorú a numerikus típusokkal, ha egy \texttt{float} típusú változóba
+\texttt{int} értéket próbálunk tölteni, hibát kapunk.
+
+\begin{glsl}{Gyakran használt típusok}
+int i, j = 1, 32000;         // egész
+float x, y, z = 3.1, 1., .5; // lebegőpontos
+vec2  v = vec2(1., 2.);      // vektor
+mat2 m = mat2(
+    vec2(1., 0.),
+    vec2(0., 1.));           // mátrix
+                             // oszlopokkal
+bool f = x < 10.1;           // logikai 
+\end{glsl}
+
+\subsection*{Operátorok}
+
+\subsection*{Gyakran használt függvények}
+\texttt{abs, length, dot, cross, normalize, pow, sin, cos, atan}
+
+\texttt{fract, mod, floor, clamp, step, smoothstep}
+
+Adattípusok:
+\texttt{int}, 
+\texttt{float}, 
+\texttt{vec2}, 
+\texttt{vec3}, 
+\texttt{vec4} 
+
+
+\subsection*{Vektorok ás mátrixok}
+
+Vektorok koordinátáit többféle módon elérhetjük, sőt egyszerűen permutálhatjuk is.
+
+\begin{glsl}{Swizzling}
+vec3 v = vec3(0, 1, 2);
+vec2 a = v.xy;           // (0, 1)
+vec3 b = v.zzz;          // (2, 2, 2)
+vec3 c = v.yzx;          // (1, 2, 0)
+\end{glsl}
+
+\subsection*{Vezérlési szerkezetek}
+\end{document}
