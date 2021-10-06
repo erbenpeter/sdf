@@ -14,7 +14,7 @@ A ShaderToy definiál néhány globális értéket,
 amelyek minden pixelre azonosak, és az árnyalóban használhatjuk őket.
 
 \begin{glsl}{Néhány ShaderToy input változó}
-vec3  iResolution; // felbontás pixelben
+vec3  iResolution; // .xy felbontás pixelben
 float iTime;       // eltelt idő mp-ben
 vec4  iMouse;      // egér pixel koordináták
 \end{glsl}
@@ -96,12 +96,13 @@ vec3 b = v.zzz;          // (2, 2, 2)
 vec3 c = v.yzx;          // (1, 2, 0)
 \end{glsl}
 
-A legtöbb függvény és operátor \emph{vektorizált}, ha műveletek
+A legtöbb függvény és operátor \emph{vektorizált}, a műveletek
 koordinátánként végződnek el.
 
 \begin{glsl}{Vektorizált aritmetika}
 vec3 v = vec3(-2.1, 1., -1.);
-vec3 w = abs(v); // (2.1, 1., 1.)
+vec3 p = abs(v); // (2.1, 1., 1.)
+vec3 q = v + 1.; // (-1.1, 2., 0.)
 \end{glsl}
     
 
