@@ -28,20 +28,20 @@ egymástól függetlenül színezik ki. Ez jelentősen tudja javítani például
 sebességét (a másodpercenként kirajzolható képkockák számát), ha a grafikus hardver támogatja
 a képpont árnyaló program \emph{párhuzamosított} futtatását.
 
-\subsection{GLSL ES, ShaderToy, Twigl}
+\subsection{GLSL ES, Shadertoy, Twigl}
 
 Az egyik népszerű online alkalmazás képpont árnyékolók tanulásához az Inigo Quilez által fejlesztett
-\url{shadertoy.com}. A következőkben a ShaderToy által használt képpont árnyaló nyelvet fogjuk használni,
+\url{shadertoy.com}. A következőkben a Shadertoy által használt képpont árnyaló nyelvet fogjuk használni,
 ami a GLSL ES egy változata.
 
-\subsubsection{Hello, ShaderToy!}
+\subsubsection{Hello, Shadertoy!}
 
 Az árnyaló nyelv hasonlít a C programozási nyelvhez (ha ez segít valakinek). Az $\mathcal{S}(x,y)$
 függvényt a \texttt{mainImage} függvény valósítja meg. A bemenő képpont (pixel) $x$ és $y$ koordinátája
 a bemenő \texttt{fragCoord} objektumból olvasható ki: \texttt{fragCoord.x} és \texttt{fragCoord.y}.
 A kimenő szín-vektort a \texttt{fragColor} változóban kell kiszámolni.
 
-\glslexample{Példa: ferde négyzetet rajzoló árnyaló}{../00_intro/examples/00hello.glsl}
+\glslexample{Példa: ferde négyzetet rajzoló árnyaló}{../00_intro/peldak/00hello.glsl}
 
 A fenti példa először normalizájla az input koordinátákat, mielőtt a tényleges árnyaló logikát megvalósítaná.
 A 3. sorban a globálisan elérhető \texttt{iResolution} objektum (vektor) felhasználásával eltolja a $(0, 0)$ pontot
@@ -55,7 +55,7 @@ az $|x|+|y| < 0.2$ egyenlőtlenség.
 érti, hogy ha egy paramétert kapott, akkor mindhárom koordinátát arra állítja be.)
 A \texttt{vec3(0.9)} világos-szürke hátteret definiál.
 
-Végül az 5. sorban az látható, hogy a ShaderToy aktuális verziójában az $a$ értéke mindig 1.0, vagyis
+Végül az 5. sorban az látható, hogy a Shadertoy aktuális verziójában az $a$ értéke mindig 1.0, vagyis
 nem változtatható az átlátszatlanság.
 
 \includegraphics[width=5cm]{images/hello.png}
@@ -71,12 +71,12 @@ dokumentumban olvasható.
 
 \subsubsection{Hello, Twigl!}
 
-Az online ShaderToy egy alternativája a Twigl, amit saját gépünkre telepíthetünk és offline futtathatunk.
+Az online Shadertoy egy alternativája a Twigl, amit saját gépünkre telepíthetünk és offline futtathatunk.
 A Twigl picit más elnevezéseket használ, ez az alább látható.
 
-\glslexample{Ferde négyzetet rajzoló árnyaló (Twigl verzió)}{../00_intro/examples/00hello_twigl.glsl}
+\glslexample{Ferde négyzetet rajzoló árnyaló (Twigl verzió)}{../00_intro/peldak/00hello_twigl.glsl}
   
-A folytatásban a ShaderToy nyelvjárását fogjuk használni. 
+A folytatásban a Shadertoy nyelvjárását fogjuk használni. 
 
 \matfeladatok
 
@@ -207,7 +207,7 @@ A Shadertoy esetében ez az input változó az \texttt{iTime}, ami másodpercben
 Az alábbi példában a kirajzolt kör középpontja
 az eltelt időtől függően változik.
 
-\glslexample{,,Pattogó'' labda}{../00_intro/examples/90bouncingb.glsl}
+\glslexample{,,Pattogó'' labda}{../00_intro/peldak/90bouncingb.glsl}
 
 \progfeladatok
 
@@ -275,10 +275,14 @@ Adjuk meg a következő alakzatok előjeles távolság függvényét:
 
 \begin{enumerate}
 
-\item Hogyan írható fel két távolságfüggvénnyel definiált alakzat
+\item Adott két távolságfüggvénnyel definiált alakzat. Keressünk formulát a
+két alakzat
 (a) uniójának,
 (b) metszetének,
-(c) különbségének távolságfüggvénye?
+(c) különbségének megjelenítéséhez. A kapott formulák között melyek azok, amelyek
+az új alakzat (pontos) előjeles távolságfüggvényét írják le?
+
+\item Adjuk meg az előző műveletek ,,sima'' változatát.
 
 \item Hogyan kerekíthető le egy alakzat?
 
@@ -286,13 +290,28 @@ Adjuk meg a következő alakzatok előjeles távolság függvényét:
 \end{enumerate}
 
 
+\progfeladatok
+\begin{enumerate}
+  \item Rajzoljunk hatszögrácsot.
+  \item Készítsünk animációt két egymáshoz kapcsolódó, ellenkező irányba forgó gogaskerékról.
+
+\end{enumerate}
+
 \section{Előjeles távolság függvények a térben}
 
 \subsection{Sugár séta algoritmus (ray marching)}
 
+\glslexample{Egyszerű sugár séta algoritmus}{../02_3d/peldak/raymarching.glsl}
+
+\subsection{Felület normálvektora}
+
+\glslexample{Normálvektor számítása (közelítő)}{../02_3d/peldak/surface_normal.glsl}
+
 \subsection{Phong megvilágítási modell}
 
 \subsection{Kamera animáció}
+
+\glslexample{Adott pontból adott pont felé néző kamera}{../02_3d/peldak/camera.glsl}
 
 
 \end{document}
