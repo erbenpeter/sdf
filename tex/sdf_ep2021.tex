@@ -58,8 +58,9 @@ A \texttt{vec3(0.9)} világos-szürke hátteret definiál.
 Végül az 5. sorban az látható, hogy a Shadertoy aktuális verziójában az $a$ értéke mindig 1.0, vagyis
 nem változtatható az átlátszatlanság.
 
-\includegraphics[width=5cm]{images/hello.png}
-
+\begin{center}
+\includegraphics[width=4cm]{images/hello.png}
+\end{center}
 
 \subsubsection{GLSL ES}
 
@@ -100,15 +101,19 @@ Lehetőleg ne használjunk elágazást (\texttt{if}) csak aritmetikát és függ
 \begin{enumerate}[resume]
   \item $f$ lineáris, $f(0)=0$, $f(1)=1$.
   \item $f$ majdnem mindig 0, kivéve amikor $|x-0.5|$ ,,kicsi''.
-  \item $f$ majdnem mindig 0, kivéve amikor $x$ ,,közel'' esik $0.1$ valamelyik egész többszöröséhez.
+  \item $f$ majdnem mindig 0, kivéve amikor $x$ ,,közel'' esik $0.3$ valamelyik egész többszöröséhez.
   \item $f$ ,,simán'' köti össze a $(0,0)$ és $(1,1)$ pontokat, a végpontokban vízszintes az érintője.
   \item Ugyanaz, mint előbb, de $f$-ről azt is megköveteljük, hogy polinomfüggvény legyen. 
 \end{enumerate}
 
 A fentebb készített ábrákra tegyük rá az $y=f(x)$ függvény grafikonját is.
 
-\includegraphics[width=5cm]{images/fv.png}
-
+\begin{center}
+\includegraphics[width=4cm]{images/f01.png}\hfill
+\includegraphics[width=4cm]{images/f02.png}\hfill
+\includegraphics[width=4cm]{images/f03.png}\hfill
+\includegraphics[width=4cm]{images/f04.png}
+\end{center}
 
 \subsection{Elemi alakzatok}
 
