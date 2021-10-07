@@ -357,6 +357,13 @@ algoritmusunk egyetlen számot ad vissza (\texttt{depth}), a találati pont kame
 Ha ez nagyobb, mint egy rögzített korlát, akkor már túl messze lenne a pont, ezt úgy kezeljük,
 hogy az adott sugár nem találta el a modellt. Ilyenkor a képpont valamilyen háttér színt kap (,,fal'', ,,ég'', ...).
 
+A sugár séta algoritmus a kamera pozíciójából indul, az aktuális sugár irányában. Minden lépésben ,,lekérdezi''
+a távolság függvényt, és annyit lép előre. Ha a kerekítési hibáktól eltekintünk, akkor nem fordulhat elő,
+hogy az objektum belsejébe érünk. Ha egy előre megadott kis értéknél közelebb jutunk az objektumhoz,
+akkor úgy tekintjük, hogya sugár eltalálta az objektumot, és visszaadjuk a kamerától való távolságot.
+Ha egy rögzített nagy távolságnál messzeb jutottunk, akkor úgy tekintjük, hogy már nem fogjuk eltalálni
+az objektumot. 
+
 \glslexample{Egyszerű sugár séta algoritmus}{../02_3d/peldak/raymarching.glsl}
 
 \subsection{Felület normálvektora}
@@ -423,6 +430,35 @@ a színtér felől a kamera felé mutat.
 Az egér pozícióját változtatva forgathatjuk a kamerát egy rögzített pont körül,
 és az előző függvény segítségével elérhetjök, hogy mindig egy rögzített pont felé nézzen.
 
-\glslexample{Sugár meghatározása az árnyalóban}{../02_3d/peldak/ray.glsl}
+\glslexample{Példa: forgatható kamera az árnyalóban}{../02_3d/peldak/ray.glsl}
+
+\subsection{Sima kompozíció}
+
+Amikor elemi alakzatok uniójaként állítunk elő komplexebb alakzatokat, előfordul, hogy
+szeretnénk elkerülni az ,,éles'' metszésvonalakat és azt várjuk, hogy a két elemi alakzat
+,,olvadjon egymásba'' (blending). Ennek matematikai eszköze a ,,sima minimum'' (smooth min),
+aminek lényege, hogy ha két érték különbsége egy adott korlátnál kisebb, akkor minimumuk helyett
+valamilyen kombinációjukkal számolunk.
+
+\begin{glsl}{Példa: polinomilális sima minimum (k=.2))}
+float smin( float a, float b, float k )
+{
+  float h = clamp( 0.5 + 0.5 * (b - a) / k, 0.0, 1.0 );
+  return mix( b, a, h ) - k * h * (1.0 - h);
+}
+\end{glsl}
+
+
+\begin{center}
+  \hfill
+  \includegraphics[width=5cm]{images/uni-min.png}\hfill
+  \includegraphics[width=5cm]{images/uni-smin.png}\hfill~
+  \end{center}
+
+\subsection{Teljes példa}
+
+Zárszóként egy térbeli szakaszok megvastagításával kapott kapszulákból
+összeállított 3D szöveg teljes kódját közöljük.
+
 
 \end{document}
