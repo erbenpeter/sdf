@@ -333,19 +333,96 @@ az új alakzat (pontos) előjeles távolságfüggvényét írják le?
 
 \section{Előjeles távolság függvények a térben}
 
+A távolság függvények jól használhatók arra, hogy 3D jeleneteket ábrázoljunk valós időben.
+Ehhez a legtöbb 3D modellezési rendszerben a következőkre van szükség:
+\begin{description}
+  \item[3D modell] Mi ezt most (közelítő) előjeles távolság függvénnyel írjuk le.
+  A függvény \emph{világ koordinátákat} (VKR) használ, nem vesz tudomást arról, honnan nézünk rá.
+  \item[Kamera] A kamera állapotát két paraméter írja le, a VKR-beli pozíciója és iránya.
+  A megjelenítő algoritmusok a 2D kép felbontásától függően a kamera állapotáthoz véges sok félegyenest
+  (sugár, ,,ray'') rendelnek és minden sugár egy képpont színének kiszámításáért felel.
+  Az alábbi kódokban a sugarak közös kezdőpontja (ami egyben a kamera pozíciója) \texttt{ro} (,,ray origin'')
+  és a a sugarak iránya \texttt{rd} (,,ray direction''). Úgy képzelhetjük, hogy a kamera
+  iránya a megjeenített téglalap középpontjába mutat.
+  \item[Fényforrás(ok)] Ahhoz, hogy lássunk valamit a képen, szükség van legalább egy fényforrásra. Ez
+  legegyszerűbb esetben pontszerű, VR-beli pozíciója, színe és intenzitása írja le. Amikor a megjelenítő algoritmus
+  azt kapja, hogy egy sugár ,,eltalálta'' a modellt, akkor a képpont színét a találati pont kis környezetéből
+  és a fényforrásokból számolja ki.
+\end{description} 
+
 \subsection{Sugár séta algoritmus (ray marching)}
+
+A folytatásban, az egyszerűség kedvéért csak homogén anyagokat modellezünk, ezért a sugár séta
+algoritmusunk egyetlen számot ad vissza (\texttt{depth}), a találati pont kamerától való távolságát.
+Ha ez nagyobb, mint egy rögzített korlát, akkor már túl messze lenne a pont, ezt úgy kezeljük,
+hogy az adott sugár nem találta el a modellt. Ilyenkor a képpont valamilyen háttér színt kap (,,fal'', ,,ég'', ...).
 
 \glslexample{Egyszerű sugár séta algoritmus}{../02_3d/peldak/raymarching.glsl}
 
 \subsection{Felület normálvektora}
 
+Az előjeles távolság függvénnyel leírt felületün matematikailag egy $f(x, y, z)=0$ egyenlettel
+adott \emph{implicit} felület. A többváltozós analízisből tudható, hogy az így leírt felületek
+normálvektora (a felületre merőleges, ,,kifelé'' mutató vektor) nem más, mint az $f$ függvény
+gradiense az adott pontban.
+$$
+\nabla f(x, y, z) =
+\left(
+  \frac{\partial f}{\partial x}, 
+  \frac{\partial f}{\partial y}, 
+  \frac{\partial f}{\partial z} 
+\right)
+$$
+A gradiens vektor koordinátáit közelíthetjük az előjeles távolság függvényből számított
+szimmetrikus differenciák segítségével. Itt motivációként gondolhatunk az egyváltozós függvények esetében
+ismert Lagrange-féle középérték tételre: 
+$f'(x_0)\approx \frac{f(x_0+\epsilon) - f(x_0-\epsilon)}{2\epsilon}$.
+
 \glslexample{Normálvektor számítása (közelítő)}{../02_3d/peldak/surface_normal.glsl}
+
+Érdemes megjegyezni, hogy ez a számítás nagyon érzékeny $\epsilon$ értékére és arra is, hogy a
+távolság függvényünk mennyire pontos. (A tipikus kompozíciók általában ,,elrontják'' a távolság függvényt, 
+de szerencsére sok esetben a felülethet ,,közel'' ez a hiba még elhanyagolható.)
 
 \subsection{Phong megvilágítási modell}
 
+A Phong megvilágítási modell egy jelentősen leegyszerűsített képlet felületi pontok
+színezéséhez. Három komponensből számítja ki egy pont színét.
+
+\begin{description}
+  \item[háttér, ambient] Ez a színtér minden pontjában konstans. Például egy kékre festett szobában
+  minden pont egy kicsit kék, ha nincs teljesen sötét.
+  \item[szórt, diffuse] A felületi pontból minden irányba azonos intenzitással visszavert fény. Az
+  intenzitás a beeső fénysugár irányának és a felület normálvektorának szögétől függ,
+  akkor maximális, amikor a fénysugár a felületre merőlegesen érkezik.
+  \item[tükröződő, specular] A visszavert fény intenzitása attől függ, mekkora szöget zár be
+  a beeső fénysugár tükörképe a kamera irányával. Ha olyan irányból nézünk a felületre, amerre
+  a tükrözött fénysugár tart, akkor csillogónak látjuk az objektumot.
+\end{description} 
+
+\glslexample{Phong megvilágítási modell}{../02_3d/peldak/phong.glsl}
+
+A példában a számított szín koordinátáit még kicsit módosítjuk a végén (gamma-korrekció).
+Az elvégzett hatványozás nagyjából egy gyökvonásnak felel meg, ami azt eredményezi, hogy
+a sötétebb tartományokban ,,széthúzzuk'', a világos tartományokban ,,összenyomjuk''
+a színeket. Erre azért van szükség, mert az emberi szem máshogy ,,méri'' az intenzitást, mint
+a digitális kamerák. 
+
 \subsection{Kamera animáció}
+
+OpenGL konvenció, hogy pozitív körüljárású koordinátarendszert használunk és a $Z$ tengely
+a színtér felől a kamera felé mutat.
+(\url{https://learnopengl.com/Getting-started/Camera})
+
+\begin{center}
+\includegraphics[width=16cm]{images/camera_axes.png}
+\end{center}
 
 \glslexample{Adott pontból adott pont felé néző kamera}{../02_3d/peldak/camera.glsl}
 
+Az egér pozícióját változtatva forgathatjuk a kamerát egy rögzített pont körül,
+és az előző függvény segítségével elérhetjök, hogy mindig egy rögzített pont felé nézzen.
+
+\glslexample{Sugár meghatározása az árnyalóban}{../02_3d/peldak/ray.glsl}
 
 \end{document}

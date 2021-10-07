@@ -6,10 +6,9 @@ float rayMarch(vec3 ro, vec3 rd)
   float depth = 0.0;
   for ( int i = 0; i < 255; i++ )
   {
-    vec3 pos = ro + depth * rd;
-    float d = map(pos);
-    depth += d;
+    float d = map(ro + depth * rd); 
     if ( d < PRECISION || depth >= MAX_DEPTH ) break;
+    depth += d;
   }
   return depth;
 }
