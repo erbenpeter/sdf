@@ -5,6 +5,14 @@
 \begin{document}
 \maketitle
 
+\emph{Megjegyzés}. Ez a jegyzet egy bővebb anyagot ír le, mint ami a táborban valójában megtörtént.
+Ott kétszer 90 perc alatt a következőket csináltuk:
+\textbf{1. nap}.
+Árnyalók és OpenGL. Shadertoy.com. GLSL. 1.1.1 példa elemzése. 1-6. feladatok. Távolság függvény definíciója.
+--- \textbf{2. nap}.
+Kör és téglalap távolságfüggvénye. Szintvonalak. Unió, metszet, különbség.
+Mese: 3D ray marching, Phong-Blinn megvilágítási modell.
+
 \section{Képpont árnyalók}
 
 \begin{tcolorbox}[title=Képpont árnyalók]
@@ -405,7 +413,12 @@ színezéséhez. Három komponensből számítja ki egy pont színét.
   \item[tükröződő, specular] A visszavert fény intenzitása attől függ, mekkora szöget zár be
   a beeső fénysugár tükörképe a kamera irányával. Ha olyan irányból nézünk a felületre, amerre
   a tükrözött fénysugár tart, akkor csillogónak látjuk az objektumot.
-\end{description} 
+\end{description}
+
+\begin{center}
+  \includegraphics[width=15cm]{images/phong.png}
+\end{center}
+  
 
 \glslexample{Phong megvilágítási modell}{../02_3d/peldak/phong.glsl}
 
@@ -460,11 +473,13 @@ float smin( float a, float b, float k )
 Zárszóként egy térbeli szakaszok megvastagításával kapott kapszulákból
 összeállított 3D szöveg teljes kódját közöljük.
 
-\glslexample{3D szöveg szakaszokból}{../02_3d/peldak/final_scene.glsl}
 
 \begin{center}
-\includegraphics[width=8cm]{images/final.png}
-\end{center}
+  \includegraphics[width=8cm]{images/final.png}
+  \end{center}
+
+\glslexample{3D szöveg szakaszokból}{../02_3d/peldak/final_scene.glsl}
+
 
 \glslexample{Szöveg forgatása}{../02_3d/peldak/final_anim.glsl}
 
