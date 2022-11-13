@@ -1,5 +1,7 @@
 # sdf
-Signed distance fields and ray marching
+Signed distance fields and ray marching.
+
+More info about the BDG Math Camp workshop can be seen here: https://home.erbenpeter.hu/eloadasok-es-publikaciok/sdf
 
 # TOC
 - Introduction to shaders
@@ -23,4 +25,5 @@ Signed distance fields and ray marching
     - primitives: sphere, box, line segment
     - ray marching algorithm (monochrome)
     - lights: diffuse, ambient, specular
-    - project: ???
+    - shadows
+    - project: rotating 3D text
